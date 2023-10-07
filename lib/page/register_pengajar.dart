@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_form_builder/flutter_form_builder.dart';
 
-const List<String> list = <String>['One', 'Two', 'Three', 'Four'];
+List<String> genderOptions = ['Male', 'Female', 'Other'];
 
 class RegisterPengajar extends StatefulWidget {
   const RegisterPengajar({super.key});
@@ -10,54 +11,62 @@ class RegisterPengajar extends StatefulWidget {
 }
 
 class _RegisterPengajarState extends State<RegisterPengajar> {
-  String dropdownValue = list.first;
+  // String _valGender = _listGender.first;
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       body: Center(
         child: SingleChildScrollView(
-          child: Column(
-            mainAxisAlignment: MainAxisAlignment.center,
-            crossAxisAlignment: CrossAxisAlignment.stretch,
-            children: [
-              const Padding(
-                padding: EdgeInsets.all(8.0),
-                child: TextField(
-                  decoration: InputDecoration(
-                    border: OutlineInputBorder(),
-                    labelText: 'Nama',
+          child: FormBuilder(
+            child: Column(
+              mainAxisAlignment: MainAxisAlignment.center,
+              crossAxisAlignment: CrossAxisAlignment.stretch,
+              children: [
+                const Padding(
+                  padding: EdgeInsets.all(8.0),
+                  child: TextField(
+                    decoration: InputDecoration(
+                      border: OutlineInputBorder(),
+                      labelText: 'Nama',
+                    ),
                   ),
                 ),
-              ),
-              Padding(
-                padding: const EdgeInsets.all(8.0),
-                child: DropdownMenu<String>(
-                  
-                  label: const Text('Jenis Kelamin'),
-                  initialSelection: list.first,
-                  onSelected: (String? value) {
-                    setState(() {
-                      dropdownValue = value!;
-                    });
-                  },
-                  dropdownMenuEntries:
-                      list.map<DropdownMenuEntry<String>>((String value) {
-                    return DropdownMenuEntry<String>(
-                        value: value, label: value);
-                  }).toList(),
-                ),
-              ),
-              const Padding(
-                padding: EdgeInsets.all(8.0),
-                child: TextField(
-                  decoration: InputDecoration(
-                    border: OutlineInputBorder(),
-                    labelText: 'Alamat',
+                Padding(
+                  padding: const EdgeInsets.all(8.0),
+                  child: FormBuilderDropdown<String>(
+                    name: 'gender',
+                    decoration: InputDecoration(
+                      labelText: 'Gender',
+                      // initialValue: 'Male',
+                      suffix: IconButton(
+                        icon: const Icon(Icons.close),
+                        onPressed: () {
+                          // _formKey.currentState!.fields['gender']?.reset();
+                        },
+                      ),
+                      hintText: 'Select Gender',
+                    ),
+                    items: genderOptions
+                        .map((gender) => DropdownMenuItem(
+                              alignment: AlignmentDirectional.center,
+                              value: gender,
+                              child: Text(gender),
+                            ))
+                        .toList(),
                   ),
                 ),
-              ),
-            ],
+                const Padding(
+                  padding: EdgeInsets.all(8.0),
+                  child: TextField(
+                    decoration: InputDecoration(
+                      border: OutlineInputBorder(),
+                      labelText: 'Alamat',
+                    ),
+                  ),
+                ),
+              ],
+            ),
           ),
         ),
       ),

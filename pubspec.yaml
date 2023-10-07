@@ -37,6 +37,7 @@ dependencies:
   cupertino_icons: ^1.0.2
   http: any
   shared_preferences: any
+  flutter_form_builder: any
 
 dev_dependencies:
   flutter_test:
