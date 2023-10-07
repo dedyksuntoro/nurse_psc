@@ -4,13 +4,14 @@ import 'package:http/http.dart';
 import 'package:http/http.dart' as http;
 import 'package:shared_preferences/shared_preferences.dart';
 
-String _baseUrl = "http://192.168.0.113/api_nurse_psc/";
+// String _baseUrl = "http://192.168.0.113/api_nurse_psc/";
+String _baseUrl = "http://192.168.1.7/api_nurse_psc/";
 
 class ApiDatabase {
-  Future login(String username, String password) async {
+  Future login(String email, String password) async {
     try {
-      Response response = await post(Uri.parse('${_baseUrl}karyawan/login.php'),
-          body: {'username': username, 'password': password});
+      Response response = await post(Uri.parse('${_baseUrl}get_login.php'),
+          body: {'email': email, 'password': password});
       return jsonDecode(response.body.toString());
     } catch (e) {
       return e.toString();

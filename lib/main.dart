@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_easyloading/flutter_easyloading.dart';
 import 'package:nurse_psc/page/login.dart';
+import 'package:nurse_psc/page/pelajar/pelajar_home.dart';
+import 'package:nurse_psc/page/pengajar/pengajar_home.dart';
 import 'package:nurse_psc/page/register_pelajar.dart';
 import 'package:nurse_psc/page/register_pengajar.dart';
 
@@ -16,8 +18,13 @@ class MyApp extends StatelessWidget {
   Widget build(BuildContext context) {
     return MaterialApp(
       routes: {
+        // PELAJAR
         '/register-pelajar': (context) => const RegisterPelajar(),
+        '/home-pelajar': (context) => const PelajarHome(),
+
+        // PENGAJAR
         '/register-pengajar': (context) => const RegisterPengajar(),
+        '/home-pengajar': (context) => const PengajarHome(),
       },
       theme: ThemeData(
         colorScheme: ColorScheme.fromSeed(seedColor: Colors.deepPurple),
