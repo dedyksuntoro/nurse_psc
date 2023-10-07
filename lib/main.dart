@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_easyloading/flutter_easyloading.dart';
 import 'package:nurse_psc/page/login.dart';
 import 'package:nurse_psc/page/register_pelajar.dart';
 import 'package:nurse_psc/page/register_pengajar.dart';
@@ -22,6 +23,7 @@ class MyApp extends StatelessWidget {
         colorScheme: ColorScheme.fromSeed(seedColor: Colors.deepPurple),
         useMaterial3: true,
       ),
+      builder: EasyLoading.init(),
       home: const Login(),
     );
   }

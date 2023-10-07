@@ -19,10 +19,8 @@ class _LoginState extends State<Login> {
             children: [
               const Padding(
                 padding: EdgeInsets.all(30.0),
-                child: Icon(
-                  Icons.person_rounded,
-                  color: Colors.deepPurple,
-                  size: 100,
+                child: Image(
+                  image: AssetImage('assets/images/login-image.png'),
                 ),
               ),
               const Padding(
@@ -60,8 +58,7 @@ class _LoginState extends State<Login> {
                         shadowColor: Colors.transparent,
                         surfaceTintColor: Colors.transparent),
                     onPressed: () {
-                      Navigator.pushReplacementNamed(
-                          context, '/register-pelajar');
+                      Navigator.pushNamed(context, '/register-pelajar');
                     },
                     child: const Text('Daftar Pelajar'),
                   ),
@@ -71,8 +68,7 @@ class _LoginState extends State<Login> {
                         shadowColor: Colors.transparent,
                         surfaceTintColor: Colors.transparent),
                     onPressed: () {
-                      Navigator.pushReplacementNamed(
-                          context, '/register-pengajar');
+                      Navigator.pushNamed(context, '/register-pengajar');
                     },
                     child: const Text('Daftar Pengajar'),
                   ),
