@@ -42,6 +42,9 @@ dependencies:
   cached_network_image: any
   flutter_easyloading: any
   awesome_dialog: any
+  flutter_custom_clippers: any
+  icons_launcher: any
+  package_rename: any
 
 dev_dependencies:
   flutter_test:
@@ -95,3 +98,21 @@ flutter:
   #
   # For details regarding fonts from package dependencies,
   # see https://flutter.dev/custom-fonts/#from-packages
+
+icons_launcher:
+  image_path: "assets/images/logo.png"
+  platforms:
+    android:
+      enable: true
+    ios:
+      enable: true
+
+package_rename_config:
+  android:
+    app_name: Nurse-PSC
+    package_name: dedyk.artmedia.npsc
+
+  ios:
+    app_name: Nurse-PSC
+    bundle_name: npsc
+    package_name: dedyk.artmedia.npsc

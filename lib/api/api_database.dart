@@ -1,6 +1,5 @@
 import 'dart:convert';
 
-import 'package:http/http.dart';
 import 'package:http/http.dart' as http;
 import 'package:shared_preferences/shared_preferences.dart';
 
@@ -8,13 +7,26 @@ import 'package:shared_preferences/shared_preferences.dart';
 String _baseUrl = "http://192.168.1.7/api_nurse_psc/";
 
 class ApiDatabase {
-  Future login(String email, String password) async {
-    try {
-      Response response = await post(Uri.parse('${_baseUrl}get_login.php'),
-          body: {'email': email, 'password': password});
-      return jsonDecode(response.body.toString());
-    } catch (e) {
-      return e.toString();
+  // Future login(String email, String password) async {
+  //   try {
+  //     Response response = await post(Uri.parse('${_baseUrl}get_login.php'),
+  //         body: {'email': email, 'password': password});
+  //     return jsonDecode(response.body.toString());
+  //   } catch (e) {
+  //     return e.toString();
+  //   }
+  // }
+
+  Future<Loginnya> getlogin(email, password) async {
+    final response =
+        await http.post(Uri.parse('${_baseUrl}get_login.php'), body: {
+      'email': email,
+      'password': password,
+    });
+    if (response.statusCode == 200) {
+      return Loginnya.fromJson(jsonDecode(response.body));
+    } else {
+      throw Exception('Failed to load');
     }
   }
 
@@ -79,6 +91,38 @@ class Crud {
     return Crud(
       pesannya: json['pesannya'].toString(),
       status: json['status'].toString(),
+    );
+  }
+}
+
+class Loginnya {
+  final String token;
+  final String id;
+  final String nama;
+  final String jenisKelamin;
+  final String alamat;
+  final String email;
+  final String tipeUser;
+
+  const Loginnya({
+    required this.token,
+    required this.id,
+    required this.nama,
+    required this.jenisKelamin,
+    required this.alamat,
+    required this.email,
+    required this.tipeUser,
+  });
+
+  factory Loginnya.fromJson(Map<String, dynamic> json) {
+    return Loginnya(
+      token: json['token'].toString(),
+      id: json['id'].toString(),
+      nama: json['nama'].toString(),
+      jenisKelamin: json['jenis_kelamin'].toString(),
+      alamat: json['alamat'].toString(),
+      email: json['email'].toString(),
+      tipeUser: json['tipe_user'].toString(),
     );
   }
 }

@@ -1,6 +1,10 @@
+import 'package:awesome_dialog/awesome_dialog.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
-import 'package:nurse_psc/page/helper/header_widget.dart';
+import 'package:flutter_custom_clippers/flutter_custom_clippers.dart';
+import 'package:nurse_psc/api/api_database.dart';
+import 'package:nurse_psc/page/login.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 
 class PelajarHome extends StatefulWidget {
   const PelajarHome({super.key});
@@ -10,17 +14,33 @@ class PelajarHome extends StatefulWidget {
 }
 
 class _PelajarHomeState extends State<PelajarHome> {
+  String namaUser = "";
+
+  getUserInfo() async {
+    SharedPreferences prefs = await SharedPreferences.getInstance();
+    setState(() {
+      namaUser = prefs.getString('nama')!;
+    });
+  }
+
+  @override
+  void initState() {
+    // TODO: implement initState
+    super.initState();
+    getUserInfo();
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
         systemOverlayStyle: SystemUiOverlayStyle.light,
-        leading: const Padding(
-          padding: EdgeInsets.only(left: 20),
+        leading: Padding(
+          padding: const EdgeInsets.only(left: 20),
           child: ClipOval(
             child: CircleAvatar(
               backgroundColor: Colors.white,
-              child: Icon(Icons.person_rounded),
+              child: Image.asset('assets/images/logo.png'),
             ),
           ),
         ),
@@ -56,7 +76,7 @@ class _PelajarHomeState extends State<PelajarHome> {
                   end: const FractionalOffset(1.0, 0.0),
                   colors: <Color>[
                 Theme.of(context).primaryColor,
-                Theme.of(context).colorScheme.secondary,
+                Theme.of(context).primaryColorLight,
               ])),
         ),
       ),
@@ -69,9 +89,59 @@ class _PelajarHomeState extends State<PelajarHome> {
           physics: const AlwaysScrollableScrollPhysics(),
           child: Stack(
             children: [
-              const SizedBox(
+              SizedBox(
+                height: 330,
+                child: ClipPath(
+                  clipper: WaveClipperTwo(),
+                  child: Container(
+                    decoration: BoxDecoration(
+                      gradient: LinearGradient(
+                        begin: const FractionalOffset(0.0, 0.0),
+                        end: const FractionalOffset(1.0, 0.0),
+                        colors: <Color>[
+                          Theme.of(context).primaryColor.withAlpha(100),
+                          Theme.of(context).primaryColorLight.withAlpha(100),
+                        ],
+                      ),
+                    ),
+                  ),
+                ),
+              ),
+              SizedBox(
                 height: 300,
-                child: HeaderWidget(300, false, Icons.house_rounded),
+                child: ClipPath(
+                  clipper: WaveClipperOne(),
+                  child: Container(
+                    decoration: BoxDecoration(
+                      gradient: LinearGradient(
+                        begin: const FractionalOffset(0.0, 0.0),
+                        end: const FractionalOffset(1.0, 0.0),
+                        colors: <Color>[
+                          Theme.of(context).primaryColor,
+                          Theme.of(context).primaryColorLight,
+                        ],
+                      ),
+                    ),
+                  ),
+                ),
+              ),
+              SizedBox(
+                height: 315,
+                child: ClipPath(
+                  clipper: WaveClipperOne(),
+                  child: Container(
+                    decoration: BoxDecoration(
+                      gradient: LinearGradient(
+                        begin: const FractionalOffset(0.0, 0.0),
+                        end: const FractionalOffset(1.0, 0.0),
+                        colors: <Color>[
+                          Theme.of(context).primaryColor.withAlpha(100),
+                          Theme.of(context).primaryColorLight.withAlpha(100),
+                        ],
+                      ),
+                    ),
+                  ),
+                ),
               ),
               Column(
                 children: [
@@ -80,9 +150,9 @@ class _PelajarHomeState extends State<PelajarHome> {
                       Container(
                         padding: const EdgeInsets.only(left: 8.0, bottom: 4.0),
                         alignment: Alignment.topLeft,
-                        child: const Text(
-                          "User Information",
-                          style: TextStyle(
+                        child: Text(
+                          'Halo, $namaUser!',
+                          style: const TextStyle(
                             color: Colors.white,
                             fontWeight: FontWeight.w500,
                             fontSize: 16,
@@ -167,9 +237,23 @@ class _PelajarHomeState extends State<PelajarHome> {
                             subtitle: Text('Keluar dari akun'),
                             trailing: Icon(Icons.arrow_forward_ios),
                           ),
-                          onTap: () {},
+                          onTap: () {
+                            AwesomeDialog(
+                              context: context,
+                              dialogType: DialogType.question,
+                              animType: AnimType.scale,
+                              title: 'Keluar',
+                              desc: 'Anda yakin ingin keluar?',
+                              btnOkOnPress: () {
+                                ApiDatabase().logout();
+                                Navigator.pushReplacementNamed(
+                                    context, '/login');
+                              },
+                              btnCancelOnPress: () {},
+                            ).show();
+                          },
                         ),
-                      )
+                      ),
                     ],
                   ),
                 ],

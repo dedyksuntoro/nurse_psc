@@ -18,6 +18,8 @@ class MyApp extends StatelessWidget {
   Widget build(BuildContext context) {
     return MaterialApp(
       routes: {
+        '/login': (context) => const Login(),
+
         // PELAJAR
         '/register-pelajar': (context) => const RegisterPelajar(),
         '/home-pelajar': (context) => const PelajarHome(),
@@ -27,7 +29,8 @@ class MyApp extends StatelessWidget {
         '/home-pengajar': (context) => const PengajarHome(),
       },
       theme: ThemeData(
-        colorScheme: ColorScheme.fromSeed(seedColor: Colors.deepPurple),
+        primaryColor: Colors.deepPurple,
+        primaryColorLight: Colors.deepPurpleAccent,
         useMaterial3: true,
       ),
       builder: EasyLoading.init(),

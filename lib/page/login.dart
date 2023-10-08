@@ -15,6 +15,83 @@ class Login extends StatefulWidget {
 
 class _LoginState extends State<Login> {
   final _formKeyLogin = GlobalKey<FormBuilderState>();
+  late Future<Loginnya> _futureLogin;
+
+  getStartLoginAs() async {
+    SharedPreferences prefs = await SharedPreferences.getInstance();
+    String? loginAs = prefs.getString('tipe_user');
+    if (loginAs == 'Pelajar') {
+      if (context.mounted) {
+        Navigator.pushReplacementNamed(context, '/home-pelajar');
+      }
+    } else if (loginAs == 'Pengajar') {
+      if (context.mounted) {
+        Navigator.pushReplacementNamed(context, '/home-pengajar');
+      }
+    }
+  }
+
+  Future<void> prosesLogin() async {
+    if (_formKeyLogin.currentState!.saveAndValidate()) {
+      EasyLoading.show(status: 'Mohon Tunggu');
+
+      _futureLogin = ApiDatabase().getlogin(
+        _formKeyLogin.currentState!.value['email'],
+        _formKeyLogin.currentState!.value['password'],
+      );
+
+      _futureLogin.then((value) async {
+        if (value.token != 'null') {
+          SharedPreferences prefs = await SharedPreferences.getInstance();
+          prefs.setString('token', value.token);
+          prefs.setString('id', value.id);
+          prefs.setString('nama', value.nama);
+          prefs.setString('jenis_kelamin', value.jenisKelamin);
+          prefs.setString('alamat', value.alamat);
+          prefs.setString(
+            'email',
+            _formKeyLogin.currentState!.value['email'],
+          );
+          prefs.setString('tipe_user', value.tipeUser);
+          prefs.setString(
+            'password',
+            _formKeyLogin.currentState!.value['password'],
+          );
+          EasyLoading.dismiss();
+          if (value.tipeUser == 'Pelajar') {
+            if (context.mounted) {
+              Navigator.pushReplacementNamed(context, '/home-pelajar');
+            }
+          } else if (value.tipeUser == 'Pengajar') {
+            if (context.mounted) {
+              Navigator.pushReplacementNamed(context, '/home-pengajar');
+            }
+          }
+        } else {
+          EasyLoading.dismiss();
+          if (context.mounted) {
+            AwesomeDialog(
+              context: context,
+              dismissOnBackKeyPress: false,
+              dismissOnTouchOutside: false,
+              dialogType: DialogType.error,
+              animType: AnimType.scale,
+              title: 'Login Gagal',
+              desc: 'Perikas kembali email dan password Anda!',
+              btnOkOnPress: () {},
+            ).show();
+          }
+        }
+      });
+    }
+  }
+
+  @override
+  void initState() {
+    // TODO: implement initState
+    super.initState();
+    getStartLoginAs();
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -103,58 +180,5 @@ class _LoginState extends State<Login> {
         ),
       ),
     );
-  }
-
-  Future<void> prosesLogin() async {
-    if (_formKeyLogin.currentState!.saveAndValidate()) {
-      EasyLoading.show(status: 'Mohon Tunggu');
-
-      dynamic data = await ApiDatabase().login(
-        _formKeyLogin.currentState!.value['email'],
-        _formKeyLogin.currentState!.value['password'],
-      );
-
-      if (data['token'] != null) {
-        SharedPreferences prefs = await SharedPreferences.getInstance();
-        prefs.setString('token', data['token']);
-        prefs.setString('id', data['id']);
-        prefs.setString('nama', data['nama']);
-        prefs.setString('jenis_kelamin', data['jenis_kelamin']);
-        prefs.setString('alamat', data['alamat']);
-        prefs.setString(
-          'email',
-          _formKeyLogin.currentState!.value['email'],
-        );
-        prefs.setString('tipe_user', data['tipe_user']);
-        prefs.setString(
-          'password',
-          _formKeyLogin.currentState!.value['password'],
-        );
-        EasyLoading.dismiss();
-        if (data['tipe_user'] == 'Pelajar') {
-          if (context.mounted) {
-            Navigator.pushReplacementNamed(context, '/home-pelajar');
-          }
-        } else if (data['tipe_user'] == 'Pengajar') {
-          if (context.mounted) {
-            Navigator.pushReplacementNamed(context, '/home-pengajar');
-          }
-        }
-      } else {
-        EasyLoading.dismiss();
-        if (context.mounted) {
-          AwesomeDialog(
-            context: context,
-            dismissOnBackKeyPress: false,
-            dismissOnTouchOutside: false,
-            dialogType: DialogType.error,
-            animType: AnimType.scale,
-            title: data['status'],
-            desc: data['pesannya'],
-            btnOkOnPress: () {},
-          ).show();
-        }
-      }
-    }
   }
 }
