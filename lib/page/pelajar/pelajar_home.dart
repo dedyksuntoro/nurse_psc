@@ -3,7 +3,6 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_custom_clippers/flutter_custom_clippers.dart';
 import 'package:nurse_psc/api/api_database.dart';
-import 'package:nurse_psc/page/login.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
 class PelajarHome extends StatefulWidget {

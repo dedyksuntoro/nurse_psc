@@ -11,11 +11,28 @@
  Target Server Version : 80030 (8.0.30)
  File Encoding         : 65001
 
- Date: 08/10/2023 23:27:20
+ Date: 10/10/2023 01:33:43
 */
 
 SET NAMES utf8mb4;
 SET FOREIGN_KEY_CHECKS = 0;
+
+-- ----------------------------
+-- Table structure for tbl_mata_pelajaran
+-- ----------------------------
+DROP TABLE IF EXISTS `tbl_mata_pelajaran`;
+CREATE TABLE `tbl_mata_pelajaran`  (
+  `id` int NOT NULL AUTO_INCREMENT,
+  `id_user_input` int NULL DEFAULT NULL,
+  `mata_pelajaran` varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_0900_ai_ci NULL DEFAULT NULL,
+  PRIMARY KEY (`id`) USING BTREE
+) ENGINE = InnoDB AUTO_INCREMENT = 3 CHARACTER SET = utf8mb4 COLLATE = utf8mb4_0900_ai_ci ROW_FORMAT = Dynamic;
+
+-- ----------------------------
+-- Records of tbl_mata_pelajaran
+-- ----------------------------
+INSERT INTO `tbl_mata_pelajaran` VALUES (1, 2, 'Matematika');
+INSERT INTO `tbl_mata_pelajaran` VALUES (2, 2, 'Bahasa');
 
 -- ----------------------------
 -- Table structure for tbl_user

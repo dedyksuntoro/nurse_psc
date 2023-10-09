@@ -45,6 +45,7 @@ dependencies:
   flutter_custom_clippers: any
   icons_launcher: any
   package_rename: any
+  url_launcher: any
 
 dev_dependencies:
   flutter_test:

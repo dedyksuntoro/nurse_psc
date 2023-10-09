@@ -171,6 +171,32 @@ class _PengajarHomeState extends State<PengajarHome> {
                                   backgroundColor:
                                       Theme.of(context).primaryColor,
                                   child: const Icon(
+                                    Icons.edit_document,
+                                    color: Colors.white,
+                                  ),
+                                ),
+                                title: const Text(
+                                  'Mata Pelajaran',
+                                  style: TextStyle(
+                                    color: Colors.black87,
+                                    fontWeight: FontWeight.w500,
+                                    fontSize: 22,
+                                  ),
+                                ),
+                                subtitle: const Text('Daftar mata pelajaran'),
+                                trailing: const Icon(Icons.arrow_forward_ios),
+                              ),
+                              onTap: () {
+                                Navigator.pushNamed(
+                                    context, '/mata-pelajaran-pengajar');
+                              },
+                            ),
+                            GestureDetector(
+                              child: ListTile(
+                                leading: CircleAvatar(
+                                  backgroundColor:
+                                      Theme.of(context).primaryColor,
+                                  child: const Icon(
                                     Icons.book_rounded,
                                     color: Colors.white,
                                   ),

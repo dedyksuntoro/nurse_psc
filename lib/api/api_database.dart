@@ -76,6 +76,41 @@ class ApiDatabase {
       throw Exception('Failed to load');
     }
   }
+
+  Future<List<ListPengajarMataPelajaran>> getPengajarMataPelajaran() async {
+    SharedPreferences localStorage;
+    localStorage = await SharedPreferences.getInstance();
+    final response = await http.post(
+      Uri.parse('$_baseUrl/get_pengajar_mata_pelajaran.php'),
+      body: {
+        'iduser': localStorage.get('id').toString(),
+      },
+    );
+    if (response.statusCode == 200) {
+      List jsonResponse = json.decode(response.body);
+      return jsonResponse
+          .map((data) => ListPengajarMataPelajaran.fromJson(data))
+          .toList();
+    } else {
+      throw Exception('Failed to load');
+    }
+  }
+
+  Future<Crud> setPengajarMataPelajaranTambah(mataPelajaran) async {
+    SharedPreferences localStorage;
+    localStorage = await SharedPreferences.getInstance();
+    final response = await http.post(
+        Uri.parse('${_baseUrl}set_pengajar_mata_pelajaran_tambah.php'),
+        body: {
+          'id_user_input': localStorage.get('id').toString(),
+          'mata_pelajaran': mataPelajaran,
+        });
+    if (response.statusCode == 200) {
+      return Crud.fromJson(jsonDecode(response.body));
+    } else {
+      throw Exception('Failed to load');
+    }
+  }
 }
 
 class Crud {
@@ -123,6 +158,26 @@ class Loginnya {
       alamat: json['alamat'].toString(),
       email: json['email'].toString(),
       tipeUser: json['tipe_user'].toString(),
+    );
+  }
+}
+
+class ListPengajarMataPelajaran {
+  final String id;
+  final String idUserInput;
+  final String mataPelajaran;
+
+  const ListPengajarMataPelajaran({
+    required this.id,
+    required this.idUserInput,
+    required this.mataPelajaran,
+  });
+
+  factory ListPengajarMataPelajaran.fromJson(Map<String, dynamic> json) {
+    return ListPengajarMataPelajaran(
+      id: json['id'].toString(),
+      idUserInput: json['id_user_input'].toString(),
+      mataPelajaran: json['mata_pelajaran'].toString(),
     );
   }
 }
