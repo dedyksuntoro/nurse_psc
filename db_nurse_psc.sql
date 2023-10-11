@@ -11,7 +11,7 @@
  Target Server Version : 80030 (8.0.30)
  File Encoding         : 65001
 
- Date: 10/10/2023 01:33:43
+ Date: 11/10/2023 07:21:29
 */
 
 SET NAMES utf8mb4;
@@ -33,6 +33,23 @@ CREATE TABLE `tbl_mata_pelajaran`  (
 -- ----------------------------
 INSERT INTO `tbl_mata_pelajaran` VALUES (1, 2, 'Matematika');
 INSERT INTO `tbl_mata_pelajaran` VALUES (2, 2, 'Bahasa');
+
+-- ----------------------------
+-- Table structure for tbl_materi
+-- ----------------------------
+DROP TABLE IF EXISTS `tbl_materi`;
+CREATE TABLE `tbl_materi`  (
+  `id` int NOT NULL AUTO_INCREMENT,
+  `id_user_input` int NULL DEFAULT NULL,
+  `id_mata_pelajaran` int NULL DEFAULT NULL,
+  `materi` longtext CHARACTER SET utf8mb4 COLLATE utf8mb4_0900_ai_ci NULL,
+  PRIMARY KEY (`id`) USING BTREE
+) ENGINE = InnoDB AUTO_INCREMENT = 2 CHARACTER SET = utf8mb4 COLLATE = utf8mb4_0900_ai_ci ROW_FORMAT = Dynamic;
+
+-- ----------------------------
+-- Records of tbl_materi
+-- ----------------------------
+INSERT INTO `tbl_materi` VALUES (1, 2, 2, '[{insert: Bahasa }, {insert: materi, attributes: {bold: true}}, {insert:  hari ini adalah }, {insert: sebagai, attributes: {color: #FFE53935}}, {insert:  }, {insert: berikut, attributes: {underline: true}}, {insert: \n}]');
 
 -- ----------------------------
 -- Table structure for tbl_user

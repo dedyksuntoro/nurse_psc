@@ -212,7 +212,10 @@ class _PengajarHomeState extends State<PengajarHome> {
                                 subtitle: const Text('Materi pembelajaran'),
                                 trailing: const Icon(Icons.arrow_forward_ios),
                               ),
-                              onTap: () {},
+                              onTap: () {
+                                Navigator.pushNamed(
+                                    context, '/materi-pengajar');
+                              },
                             ),
                             GestureDetector(
                               child: ListTile(

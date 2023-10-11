@@ -111,6 +111,41 @@ class ApiDatabase {
       throw Exception('Failed to load');
     }
   }
+
+  Future<List<ListPengajarMateri>> getPengajarMateri() async {
+    SharedPreferences localStorage;
+    localStorage = await SharedPreferences.getInstance();
+    final response = await http.post(
+      Uri.parse('$_baseUrl/get_pengajar_materi.php'),
+      body: {
+        'iduser': localStorage.get('id').toString(),
+      },
+    );
+    if (response.statusCode == 200) {
+      List jsonResponse = json.decode(response.body);
+      return jsonResponse
+          .map((data) => ListPengajarMateri.fromJson(data))
+          .toList();
+    } else {
+      throw Exception('Failed to load');
+    }
+  }
+
+  Future<Crud> setPengajarMateriTambah(idMataPelajaran, materi) async {
+    SharedPreferences localStorage;
+    localStorage = await SharedPreferences.getInstance();
+    final response = await http
+        .post(Uri.parse('${_baseUrl}set_pengajar_materi_tambah.php'), body: {
+      'id_user_input': localStorage.get('id').toString(),
+      'id_mata_pelajaran': idMataPelajaran,
+      'materi': materi,
+    });
+    if (response.statusCode == 200) {
+      return Crud.fromJson(jsonDecode(response.body));
+    } else {
+      throw Exception('Failed to load');
+    }
+  }
 }
 
 class Crud {
@@ -177,6 +212,32 @@ class ListPengajarMataPelajaran {
     return ListPengajarMataPelajaran(
       id: json['id'].toString(),
       idUserInput: json['id_user_input'].toString(),
+      mataPelajaran: json['mata_pelajaran'].toString(),
+    );
+  }
+}
+
+class ListPengajarMateri {
+  final String id;
+  final String idUserInput;
+  final String idMataPelajaran;
+  final String materi;
+  final String mataPelajaran;
+
+  const ListPengajarMateri({
+    required this.id,
+    required this.idUserInput,
+    required this.idMataPelajaran,
+    required this.materi,
+    required this.mataPelajaran,
+  });
+
+  factory ListPengajarMateri.fromJson(Map<String, dynamic> json) {
+    return ListPengajarMateri(
+      id: json['id_materi'].toString(),
+      idUserInput: json['id_user_input_materi'].toString(),
+      idMataPelajaran: json['id_mata_pelajaran'].toString(),
+      materi: json['materi'].toString(),
       mataPelajaran: json['mata_pelajaran'].toString(),
     );
   }

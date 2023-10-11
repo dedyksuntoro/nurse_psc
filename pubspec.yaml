@@ -46,6 +46,7 @@ dependencies:
   icons_launcher: any
   package_rename: any
   url_launcher: any
+  flutter_quill: any
 
 dev_dependencies:
   flutter_test:
