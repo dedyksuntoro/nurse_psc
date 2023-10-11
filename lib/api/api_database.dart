@@ -3,8 +3,8 @@ import 'dart:convert';
 import 'package:http/http.dart' as http;
 import 'package:shared_preferences/shared_preferences.dart';
 
-String _baseUrl = "http://192.168.0.113/api_nurse_psc/";
-// String _baseUrl = "http://192.168.1.7/api_nurse_psc/";
+// String _baseUrl = "http://192.168.0.113/api_nurse_psc/";
+String _baseUrl = "http://192.168.1.7/api_nurse_psc/";
 
 class ApiDatabase {
   // Future login(String email, String password) async {
@@ -81,7 +81,7 @@ class ApiDatabase {
     SharedPreferences localStorage;
     localStorage = await SharedPreferences.getInstance();
     final response = await http.post(
-      Uri.parse('$_baseUrl/get_pengajar_mata_pelajaran.php'),
+      Uri.parse('${_baseUrl}get_pengajar_mata_pelajaran.php'),
       body: {
         'iduser': localStorage.get('id').toString(),
       },
@@ -116,7 +116,7 @@ class ApiDatabase {
     SharedPreferences localStorage;
     localStorage = await SharedPreferences.getInstance();
     final response = await http.post(
-      Uri.parse('$_baseUrl/get_pengajar_materi.php'),
+      Uri.parse('${_baseUrl}get_pengajar_materi.php'),
       body: {
         'iduser': localStorage.get('id').toString(),
       },
@@ -125,6 +125,25 @@ class ApiDatabase {
       List jsonResponse = json.decode(response.body);
       return jsonResponse
           .map((data) => ListPengajarMateri.fromJson(data))
+          .toList();
+    } else {
+      throw Exception('Failed to load');
+    }
+  }
+
+  Future<List<ListPelajarMateri>> getPelajarMateri() async {
+    SharedPreferences localStorage;
+    localStorage = await SharedPreferences.getInstance();
+    final response = await http.post(
+      Uri.parse('${_baseUrl}get_pelajar_materi.php'),
+      body: {
+        'iduser': localStorage.get('id').toString(),
+      },
+    );
+    if (response.statusCode == 200) {
+      List jsonResponse = json.decode(response.body);
+      return jsonResponse
+          .map((data) => ListPelajarMateri.fromJson(data))
           .toList();
     } else {
       throw Exception('Failed to load');
@@ -151,7 +170,7 @@ class ApiDatabase {
     SharedPreferences localStorage;
     localStorage = await SharedPreferences.getInstance();
     final response = await http.post(
-      Uri.parse('$_baseUrl/get_pengajar_soal.php'),
+      Uri.parse('${_baseUrl}get_pengajar_soal.php'),
       body: {
         'iduser': localStorage.get('id').toString(),
         'id_mata_pelajaran': idMataPelajaran,
@@ -190,6 +209,88 @@ class ApiDatabase {
       throw Exception('Failed to load');
     }
   }
+
+  Future<Crud> setPelajarStatusMateri(idMateri) async {
+    SharedPreferences localStorage;
+    localStorage = await SharedPreferences.getInstance();
+    final response = await http
+        .post(Uri.parse('${_baseUrl}set_pelajar_materi_selesai.php'), body: {
+      'id_materi': idMateri,
+      'id_user': localStorage.get('id').toString(),
+    });
+    if (response.statusCode == 200) {
+      return Crud.fromJson(jsonDecode(response.body));
+    } else {
+      throw Exception('Failed to load');
+    }
+  }
+
+  Future<CountStatusMateri> getPelajarCountStatusMateri(idMateri) async {
+    SharedPreferences localStorage;
+    localStorage = await SharedPreferences.getInstance();
+    final response = await http
+        .post(Uri.parse('${_baseUrl}get_pelajar_materi_status.php'), body: {
+      'id_materi': idMateri,
+      'id_user': localStorage.get('id').toString(),
+    });
+    if (response.statusCode == 200) {
+      return CountStatusMateri.fromJson(jsonDecode(response.body));
+    } else {
+      throw Exception('Failed to load');
+    }
+  }
+
+  Future<List<ListPelajarMataPelajaran>> getPelajarMataPelajaran() async {
+    SharedPreferences localStorage;
+    localStorage = await SharedPreferences.getInstance();
+    final response = await http.post(
+      Uri.parse('${_baseUrl}get_pelajar_mata_pelajaran.php'),
+    );
+    if (response.statusCode == 200) {
+      List jsonResponse = json.decode(response.body);
+      return jsonResponse
+          .map((data) => ListPelajarMataPelajaran.fromJson(data))
+          .toList();
+    } else {
+      throw Exception('Failed to load');
+    }
+  }
+
+  Future<List<ListPelajarSoal>> getPelajarSoal(idMataPelajaran) async {
+    SharedPreferences localStorage;
+    localStorage = await SharedPreferences.getInstance();
+    final response = await http.post(
+      Uri.parse('${_baseUrl}get_pelajar_soal.php'),
+      body: {
+        'id_mata_pelajaran': idMataPelajaran,
+      },
+    );
+    if (response.statusCode == 200) {
+      List jsonResponse = json.decode(response.body);
+      return jsonResponse
+          .map((data) => ListPelajarSoal.fromJson(data))
+          .toList();
+    } else {
+      throw Exception('Failed to load');
+    }
+  }
+
+  Future<Crud> setPelajarStatusSoal(idSoal, jawaban, nilai) async {
+    SharedPreferences localStorage;
+    localStorage = await SharedPreferences.getInstance();
+    final response = await http
+        .post(Uri.parse('${_baseUrl}set_pelajar_soal_selesai.php'), body: {
+      'id_soal': idSoal,
+      'id_user': localStorage.get('id').toString(),
+      'jawaban': jawaban,
+      'nilai': nilai,
+    });
+    if (response.statusCode == 200) {
+      return Crud.fromJson(jsonDecode(response.body));
+    } else {
+      throw Exception('Failed to load');
+    }
+  }
 }
 
 class Crud {
@@ -205,6 +306,20 @@ class Crud {
     return Crud(
       pesannya: json['pesannya'].toString(),
       status: json['status'].toString(),
+    );
+  }
+}
+
+class CountStatusMateri {
+  final String statusMateri;
+
+  const CountStatusMateri({
+    required this.statusMateri,
+  });
+
+  factory CountStatusMateri.fromJson(Map<String, dynamic> json) {
+    return CountStatusMateri(
+      statusMateri: json['status_materi'].toString(),
     );
   }
 }
@@ -261,6 +376,29 @@ class ListPengajarMataPelajaran {
   }
 }
 
+class ListPelajarMataPelajaran {
+  final String id;
+  final String idUserInput;
+  final String mataPelajaran;
+  final String statusMateri;
+
+  const ListPelajarMataPelajaran({
+    required this.id,
+    required this.idUserInput,
+    required this.mataPelajaran,
+    required this.statusMateri,
+  });
+
+  factory ListPelajarMataPelajaran.fromJson(Map<String, dynamic> json) {
+    return ListPelajarMataPelajaran(
+      id: json['id'].toString(),
+      idUserInput: json['id_user_input'].toString(),
+      mataPelajaran: json['mata_pelajaran'].toString(),
+      statusMateri: json['status_materi'].toString(),
+    );
+  }
+}
+
 class ListPengajarMateri {
   final String id;
   final String idUserInput;
@@ -278,6 +416,32 @@ class ListPengajarMateri {
 
   factory ListPengajarMateri.fromJson(Map<String, dynamic> json) {
     return ListPengajarMateri(
+      id: json['id_materi'].toString(),
+      idUserInput: json['id_user_input_materi'].toString(),
+      idMataPelajaran: json['id_mata_pelajaran'].toString(),
+      materi: json['materi'].toString(),
+      mataPelajaran: json['mata_pelajaran'].toString(),
+    );
+  }
+}
+
+class ListPelajarMateri {
+  final String id;
+  final String idUserInput;
+  final String idMataPelajaran;
+  final String materi;
+  final String mataPelajaran;
+
+  const ListPelajarMateri({
+    required this.id,
+    required this.idUserInput,
+    required this.idMataPelajaran,
+    required this.materi,
+    required this.mataPelajaran,
+  });
+
+  factory ListPelajarMateri.fromJson(Map<String, dynamic> json) {
+    return ListPelajarMateri(
       id: json['id_materi'].toString(),
       idUserInput: json['id_user_input_materi'].toString(),
       idMataPelajaran: json['id_mata_pelajaran'].toString(),
@@ -318,6 +482,53 @@ class ListPengajarSoal {
 
   factory ListPengajarSoal.fromJson(Map<String, dynamic> json) {
     return ListPengajarSoal(
+      id: json['id_soal'].toString(),
+      idUserInput: json['id_user_input_soal'].toString(),
+      idMataPelajaran: json['id_mata_pelajaran'].toString(),
+      soal: json['soal'].toString(),
+      jawabanA: json['jawaban_a'].toString(),
+      jawabanB: json['jawaban_b'].toString(),
+      jawabanC: json['jawaban_c'].toString(),
+      jawabanD: json['jawaban_d'].toString(),
+      jawabanE: json['jawaban_e'].toString(),
+      jawabanBenar: json['jawaban_benar'].toString(),
+      nilaiBenar: json['nilai_benar'].toString(),
+      mataPelajaran: json['mata_pelajaran'].toString(),
+    );
+  }
+}
+
+class ListPelajarSoal {
+  final String id;
+  final String idUserInput;
+  final String idMataPelajaran;
+  final String soal;
+  final String jawabanA;
+  final String jawabanB;
+  final String jawabanC;
+  final String jawabanD;
+  final String jawabanE;
+  final String jawabanBenar;
+  final String nilaiBenar;
+  final String mataPelajaran;
+
+  const ListPelajarSoal({
+    required this.id,
+    required this.idUserInput,
+    required this.idMataPelajaran,
+    required this.soal,
+    required this.jawabanA,
+    required this.jawabanB,
+    required this.jawabanC,
+    required this.jawabanD,
+    required this.jawabanE,
+    required this.jawabanBenar,
+    required this.nilaiBenar,
+    required this.mataPelajaran,
+  });
+
+  factory ListPelajarSoal.fromJson(Map<String, dynamic> json) {
+    return ListPelajarSoal(
       id: json['id_soal'].toString(),
       idUserInput: json['id_user_input_soal'].toString(),
       idMataPelajaran: json['id_mata_pelajaran'].toString(),

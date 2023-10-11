@@ -2,6 +2,9 @@ import 'package:flutter/material.dart';
 import 'package:flutter_easyloading/flutter_easyloading.dart';
 import 'package:nurse_psc/page/login.dart';
 import 'package:nurse_psc/page/pelajar/pelajar_home.dart';
+import 'package:nurse_psc/page/pelajar/pelajar_materi.dart';
+import 'package:nurse_psc/page/pelajar/pelajar_soal.dart';
+import 'package:nurse_psc/page/pelajar/pelajar_soal_matpel.dart';
 import 'package:nurse_psc/page/pengajar/pengajar_mata_pelajaran.dart';
 import 'package:nurse_psc/page/pengajar/pengajar_home.dart';
 import 'package:nurse_psc/page/pengajar/pengajar_materi.dart';
@@ -29,6 +32,9 @@ class MyApp extends StatelessWidget {
         // PELAJAR
         '/register-pelajar': (context) => const RegisterPelajar(),
         '/home-pelajar': (context) => const PelajarHome(),
+        '/materi-pelajar': (context) => const PelajarMateri(),
+        '/soal-pelajar-matpel': (context) => const PelajarSoalMatpel(),
+        '/soal-pelajar': (context) => const PelajarSoal(),
 
         // PENGAJAR
         '/register-pengajar': (context) => const RegisterPengajar(),

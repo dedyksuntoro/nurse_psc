@@ -1,26 +1,23 @@
+import 'package:awesome_dialog/awesome_dialog.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
-import 'package:flutter_html/flutter_html.dart';
 import 'package:nurse_psc/api/api_database.dart';
-import 'package:flutter_quill/flutter_quill.dart' as textEditor_quill;
 
-class PengajarMateri extends StatefulWidget {
-  const PengajarMateri({super.key});
+class PelajarSoalMatpel extends StatefulWidget {
+  const PelajarSoalMatpel({super.key});
 
   @override
-  State<PengajarMateri> createState() => _PengajarMateriState();
+  State<PelajarSoalMatpel> createState() => _PelajarSoalMatpelState();
 }
 
-class _PengajarMateriState extends State<PengajarMateri> {
-  textEditor_quill.QuillController _controllerMateri =
-      textEditor_quill.QuillController.basic();
-  late Future<List<ListPengajarMateri>> _futurePengajarMateri;
+class _PelajarSoalMatpelState extends State<PelajarSoalMatpel> {
+  late Future<List<ListPelajarMataPelajaran>> _futurePelajarMataPelajaran;
 
   @override
   void initState() {
     // TODO: implement initState
     super.initState();
-    _futurePengajarMateri = ApiDatabase().getPengajarMateri();
+    _futurePelajarMataPelajaran = ApiDatabase().getPelajarMataPelajaran();
   }
 
   @override
@@ -29,17 +26,9 @@ class _PengajarMateriState extends State<PengajarMateri> {
       appBar: AppBar(
         systemOverlayStyle: SystemUiOverlayStyle.light,
         title: const Text(
-          "Materi",
+          "Pilih Mata Pelajaran",
           style: TextStyle(color: Colors.white, fontWeight: FontWeight.bold),
         ),
-        actions: [
-          IconButton(
-            onPressed: () {
-              Navigator.pushNamed(context, '/materi-pengajar-tambah');
-            },
-            icon: const Icon(Icons.add_rounded),
-          ),
-        ],
         titleSpacing: 0,
         iconTheme: const IconThemeData(color: Colors.white),
         flexibleSpace: Container(
@@ -55,8 +44,8 @@ class _PengajarMateriState extends State<PengajarMateri> {
           ),
         ),
       ),
-      body: FutureBuilder<List<ListPengajarMateri>>(
-        future: _futurePengajarMateri,
+      body: FutureBuilder<List<ListPelajarMataPelajaran>>(
+        future: _futurePelajarMataPelajaran,
         builder: (context, snapshot) {
           if (snapshot.connectionState == ConnectionState.done) {
             if (snapshot.hasError) {
@@ -79,7 +68,7 @@ class _PengajarMateriState extends State<PengajarMateri> {
     return Center(
       child: FloatingActionButton.extended(
         onPressed: () {
-          _futurePengajarMateri = ApiDatabase().getPengajarMateri();
+          _futurePelajarMataPelajaran = ApiDatabase().getPelajarMataPelajaran();
           setState(() {});
         },
         icon: const Icon(Icons.refresh, color: Colors.white),
@@ -112,7 +101,7 @@ class _PengajarMateriState extends State<PengajarMateri> {
         ),
       ),
       onRefresh: () async {
-        _futurePengajarMateri = ApiDatabase().getPengajarMateri();
+        _futurePelajarMataPelajaran = ApiDatabase().getPelajarMataPelajaran();
         setState(() {});
       },
     );
@@ -133,7 +122,7 @@ class _PengajarMateriState extends State<PengajarMateri> {
       backgroundColor: Theme.of(context).primaryColor,
       strokeWidth: 3.0,
       onRefresh: () async {
-        _futurePengajarMateri = ApiDatabase().getPengajarMateri();
+        _futurePelajarMataPelajaran = ApiDatabase().getPelajarMataPelajaran();
         setState(() {});
       },
       child: ListView.separated(
@@ -153,61 +142,25 @@ class _PengajarMateriState extends State<PengajarMateri> {
               tileColor: Colors.white,
               title: Text(snapshot.data![index].mataPelajaran),
               onTap: () {
-                showModalBottomSheet<void>(
-                  isScrollControlled: true,
-                  enableDrag: false,
-                  shape: const RoundedRectangleBorder(
-                      borderRadius:
-                          BorderRadius.vertical(top: Radius.circular(12))),
-                  context: context,
-                  builder: (BuildContext context) {
-                    return Container(
-                      height: MediaQuery.of(context).size.height * 0.9,
-                      child: Stack(
-                        children: [
-                          Container(
-                            height: 50.0,
-                            width: MediaQuery.of(context).size.width,
-                            child: Row(
-                              mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                              children: [
-                                IconButton(
-                                    icon: const Icon(Icons.arrow_back),
-                                    onPressed: () {
-                                      Navigator.of(context).pop();
-                                    }),
-                                Flexible(
-                                  child: Text(
-                                    snapshot.data![index].mataPelajaran,
-                                    overflow: TextOverflow.ellipsis,
-                                    style: const TextStyle(
-                                        fontWeight: FontWeight.bold,
-                                        fontSize: 20),
-                                  ),
-                                ),
-                                const Opacity(
-                                  opacity: 0.0,
-                                  child: IconButton(
-                                    icon: Icon(Icons.clear),
-                                    onPressed: null,
-                                  ),
-                                ),
-                              ],
-                            ),
-                          ),
-                          Container(
-                            margin: const EdgeInsets.only(top: 50.0),
-                            child: SingleChildScrollView(
-                              child: Html(
-                                data: snapshot.data![index].materi,
-                              ),
-                            ),
-                          ),
-                        ],
-                      ),
-                    );
-                  },
-                );
+                if (snapshot.data![index].statusMateri == 'null') {
+                  AwesomeDialog(
+                    context: context,
+                    dismissOnBackKeyPress: false,
+                    dismissOnTouchOutside: false,
+                    dialogType: DialogType.error,
+                    animType: AnimType.scale,
+                    title: 'Selesaikan Materi',
+                    desc:
+                        'Materi Belum Anda Selesaikan.\nSelesaikan Dahulu Materi Soal Yang Anda Pilih!',
+                    btnOkOnPress: () {},
+                  ).show();
+                } else {
+                  Navigator.pushNamed(
+                    context,
+                    '/soal-pelajar',
+                    arguments: snapshot.data![index].id.toString(),
+                  );
+                }
               },
             );
           }),

@@ -185,7 +185,9 @@ class _PelajarHomeState extends State<PelajarHome> {
                                 subtitle: const Text('Materi pembelajaran'),
                                 trailing: const Icon(Icons.arrow_forward_ios),
                               ),
-                              onTap: () {},
+                              onTap: () {
+                                Navigator.pushNamed(context, '/materi-pelajar');
+                              },
                             ),
                             GestureDetector(
                               child: ListTile(
@@ -208,7 +210,10 @@ class _PelajarHomeState extends State<PelajarHome> {
                                 subtitle: const Text('Soal pembelajaran'),
                                 trailing: const Icon(Icons.arrow_forward_ios),
                               ),
-                              onTap: () {},
+                              onTap: () {
+                                Navigator.pushNamed(
+                                    context, '/soal-pelajar-matpel');
+                              },
                             ),
                           ],
                         ),
