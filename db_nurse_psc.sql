@@ -1,7 +1,7 @@
 /*
  Navicat Premium Data Transfer
 
- Source Server         : localhost
+ Source Server         : Local
  Source Server Type    : MySQL
  Source Server Version : 80030 (8.0.30)
  Source Host           : localhost:3306
@@ -11,7 +11,7 @@
  Target Server Version : 80030 (8.0.30)
  File Encoding         : 65001
 
- Date: 11/10/2023 07:21:29
+ Date: 11/10/2023 16:16:33
 */
 
 SET NAMES utf8mb4;
@@ -26,7 +26,7 @@ CREATE TABLE `tbl_mata_pelajaran`  (
   `id_user_input` int NULL DEFAULT NULL,
   `mata_pelajaran` varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_0900_ai_ci NULL DEFAULT NULL,
   PRIMARY KEY (`id`) USING BTREE
-) ENGINE = InnoDB AUTO_INCREMENT = 3 CHARACTER SET = utf8mb4 COLLATE = utf8mb4_0900_ai_ci ROW_FORMAT = Dynamic;
+) ENGINE = InnoDB AUTO_INCREMENT = 3 CHARACTER SET = utf8mb4 COLLATE = utf8mb4_0900_ai_ci ROW_FORMAT = DYNAMIC;
 
 -- ----------------------------
 -- Records of tbl_mata_pelajaran
@@ -44,12 +44,37 @@ CREATE TABLE `tbl_materi`  (
   `id_mata_pelajaran` int NULL DEFAULT NULL,
   `materi` longtext CHARACTER SET utf8mb4 COLLATE utf8mb4_0900_ai_ci NULL,
   PRIMARY KEY (`id`) USING BTREE
-) ENGINE = InnoDB AUTO_INCREMENT = 2 CHARACTER SET = utf8mb4 COLLATE = utf8mb4_0900_ai_ci ROW_FORMAT = Dynamic;
+) ENGINE = InnoDB AUTO_INCREMENT = 5 CHARACTER SET = utf8mb4 COLLATE = utf8mb4_0900_ai_ci ROW_FORMAT = DYNAMIC;
 
 -- ----------------------------
 -- Records of tbl_materi
 -- ----------------------------
-INSERT INTO `tbl_materi` VALUES (1, 2, 2, '[{insert: Bahasa }, {insert: materi, attributes: {bold: true}}, {insert:  hari ini adalah }, {insert: sebagai, attributes: {color: #FFE53935}}, {insert:  }, {insert: berikut, attributes: {underline: true}}, {insert: \n}]');
+INSERT INTO `tbl_materi` VALUES (4, 2, 2, '<p><strong>Materinya</strong> adalah<br/>Kesehatan <u>jasmani</u></p>');
+
+-- ----------------------------
+-- Table structure for tbl_soal
+-- ----------------------------
+DROP TABLE IF EXISTS `tbl_soal`;
+CREATE TABLE `tbl_soal`  (
+  `id` int NOT NULL AUTO_INCREMENT,
+  `id_user_input` int NULL DEFAULT NULL,
+  `id_mata_pelajaran` int NULL DEFAULT NULL,
+  `soal` text CHARACTER SET utf8mb4 COLLATE utf8mb4_0900_ai_ci NULL,
+  `jawaban_a` text CHARACTER SET utf8mb4 COLLATE utf8mb4_0900_ai_ci NULL,
+  `jawaban_b` text CHARACTER SET utf8mb4 COLLATE utf8mb4_0900_ai_ci NULL,
+  `jawaban_c` text CHARACTER SET utf8mb4 COLLATE utf8mb4_0900_ai_ci NULL,
+  `jawaban_d` text CHARACTER SET utf8mb4 COLLATE utf8mb4_0900_ai_ci NULL,
+  `jawaban_e` text CHARACTER SET utf8mb4 COLLATE utf8mb4_0900_ai_ci NULL,
+  `jawaban_benar` varchar(5) CHARACTER SET utf8mb4 COLLATE utf8mb4_0900_ai_ci NULL DEFAULT NULL,
+  `nilai_benar` int NULL DEFAULT NULL,
+  PRIMARY KEY (`id`) USING BTREE
+) ENGINE = InnoDB AUTO_INCREMENT = 7 CHARACTER SET = utf8mb4 COLLATE = utf8mb4_0900_ai_ci ROW_FORMAT = Dynamic;
+
+-- ----------------------------
+-- Records of tbl_soal
+-- ----------------------------
+INSERT INTO `tbl_soal` VALUES (5, 2, 2, 'Seorang perawat bekerja di ruang rawat inap VVIP ditugaskan membuat indikator mutu pelayanan keperawatan yang berhubungan dengan kelengkapan dokumentasi keperawatan. Berdasarkan hal tersebut, apakah indikator mutu yang sesuai dengan kaidah SMART?', 'Kelengkapan dokumentasi yg diharapkan sebesar 90%', 'Diharapkan pendokumentasian lengkap', 'Diharapkan seluruh perawat mengisi lengkap', 'Kelengkapan dokumentasi harus sesuai SOP', 'Kelengkapan dokumentasi di periksa berkala', 'E', 10);
+INSERT INTO `tbl_soal` VALUES (6, 2, 2, 'Seorang perawat bekerja di ruang rawat inap VVIP ditugaskan membuat indikator mutu pelayanan keperawatan yang berhubungan dengan kelengkapan dokumentasi keperawatan. Berdasarkan hal tersebut, apakah indikator mutu yang sesuai dengan kaidah SMART?', 'Kelengkapan dokumentasi yg diharapkan sebesar 90%', 'Diharapkan pendokumentasian lengkap', 'Diharapkan seluruh perawat mengisi lengkap', 'Kelengkapan dokumentasi harus sesuai SOP', 'Kelengkapan dokumentasi di periksa berkala', 'E', 10);
 
 -- ----------------------------
 -- Table structure for tbl_user
