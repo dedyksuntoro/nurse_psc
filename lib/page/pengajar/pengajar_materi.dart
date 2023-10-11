@@ -1,6 +1,10 @@
+import 'dart:convert';
+
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
+import 'package:flutter_html/flutter_html.dart';
 import 'package:nurse_psc/api/api_database.dart';
+import 'package:flutter_quill/flutter_quill.dart' as textEditor_quill;
 
 class PengajarMateri extends StatefulWidget {
   const PengajarMateri({super.key});
@@ -10,6 +14,8 @@ class PengajarMateri extends StatefulWidget {
 }
 
 class _PengajarMateriState extends State<PengajarMateri> {
+  textEditor_quill.QuillController _controllerMateri =
+      textEditor_quill.QuillController.basic();
   late Future<List<ListPengajarMateri>> _futurePengajarMateri;
 
   @override
@@ -150,18 +156,56 @@ class _PengajarMateriState extends State<PengajarMateri> {
               title: Text(snapshot.data![index].mataPelajaran),
               onTap: () {
                 showModalBottomSheet<void>(
+                  isScrollControlled: true,
+                  enableDrag: false,
+                  shape: const RoundedRectangleBorder(
+                      borderRadius:
+                          BorderRadius.vertical(top: Radius.circular(12))),
                   context: context,
                   builder: (BuildContext context) {
-                    return SizedBox(
-                      height: MediaQuery.of(context).size.height,
-                      child: Center(
-                        child: Column(
-                          mainAxisAlignment: MainAxisAlignment.center,
-                          mainAxisSize: MainAxisSize.min,
-                          children: [
-                            Text(snapshot.data![index].mataPelajaran),
-                          ],
-                        ),
+                    return Container(
+                      height: MediaQuery.of(context).size.height * 0.9,
+                      child: Stack(
+                        children: [
+                          Container(
+                            height: 50.0,
+                            width: MediaQuery.of(context).size.width,
+                            child: Row(
+                              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                              children: [
+                                IconButton(
+                                    icon: const Icon(Icons.arrow_back),
+                                    onPressed: () {
+                                      Navigator.of(context).pop();
+                                    }),
+                                Flexible(
+                                  child: Text(
+                                    snapshot.data![index].mataPelajaran,
+                                    overflow: TextOverflow.ellipsis,
+                                    style: const TextStyle(
+                                        fontWeight: FontWeight.bold,
+                                        fontSize: 20),
+                                  ),
+                                ),
+                                const Opacity(
+                                  opacity: 0.0,
+                                  child: IconButton(
+                                    icon: Icon(Icons.clear),
+                                    onPressed: null,
+                                  ),
+                                ),
+                              ],
+                            ),
+                          ),
+                          Container(
+                            margin: const EdgeInsets.only(top: 50.0),
+                            child: SingleChildScrollView(
+                              child: Html(
+                                data: snapshot.data![index].materi,
+                              ),
+                            ),
+                          ),
+                        ],
                       ),
                     );
                   },

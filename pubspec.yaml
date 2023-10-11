@@ -47,6 +47,8 @@ dependencies:
   package_rename: any
   url_launcher: any
   flutter_quill: any
+  vsc_quill_delta_to_html: any
+  flutter_html: any
 
 dev_dependencies:
   flutter_test:

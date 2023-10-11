@@ -6,6 +6,9 @@ import 'package:nurse_psc/page/pengajar/pengajar_mata_pelajaran.dart';
 import 'package:nurse_psc/page/pengajar/pengajar_home.dart';
 import 'package:nurse_psc/page/pengajar/pengajar_materi.dart';
 import 'package:nurse_psc/page/pengajar/pengajar_materi_tambah.dart';
+import 'package:nurse_psc/page/pengajar/pengajar_soal.dart';
+import 'package:nurse_psc/page/pengajar/pengajar_soal_matpel.dart';
+import 'package:nurse_psc/page/pengajar/pengajar_soal_tambah.dart';
 import 'package:nurse_psc/page/register_pelajar.dart';
 import 'package:nurse_psc/page/register_pengajar.dart';
 
@@ -33,6 +36,9 @@ class MyApp extends StatelessWidget {
         '/mata-pelajaran-pengajar': (context) => const PengajarMataPelajaran(),
         '/materi-pengajar': (context) => const PengajarMateri(),
         '/materi-pengajar-tambah': (context) => const PengajarMateriTambah(),
+        '/soal-pengajar-matpel': (context) => const PengajarSoalMatpel(),
+        '/soal-pengajar': (context) => const PengajarSoal(),
+        '/soal-pengajar-tambah': (context) => const PengajarSoalTambah(),
       },
       theme: ThemeData(
         primaryColor: Colors.deepPurple,

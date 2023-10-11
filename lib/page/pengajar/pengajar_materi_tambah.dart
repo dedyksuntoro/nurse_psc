@@ -1,5 +1,3 @@
-import 'dart:developer';
-
 import 'package:awesome_dialog/awesome_dialog.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
@@ -8,6 +6,7 @@ import 'package:flutter_form_builder/flutter_form_builder.dart';
 import 'package:flutter_quill/flutter_quill.dart' as textEditor_quill;
 import 'package:form_builder_validators/form_builder_validators.dart';
 import 'package:nurse_psc/api/api_database.dart';
+import 'package:vsc_quill_delta_to_html/vsc_quill_delta_to_html.dart';
 
 class PengajarMateriTambah extends StatefulWidget {
   const PengajarMateriTambah({super.key});
@@ -123,6 +122,15 @@ class _PengajarMateriTambahState extends State<PengajarMateriTambah> {
                   child: const Text('Tambah Data'),
                   onPressed: () {
                     // print(_controllerMateri.document.toDelta().toJson());
+                    final deltaOps =
+                        _controllerMateri.document.toDelta().toJson();
+
+                    final converter = QuillDeltaToHtmlConverter(
+                      List.castFrom(deltaOps),
+                      ConverterOptions.forEmail(),
+                    );
+
+                    final html = converter.convert();
                     if (_formKeyPengajarMateriTambah.currentState!
                         .saveAndValidate()) {
                       EasyLoading.show(status: 'Mohon Tunggu');
@@ -130,10 +138,7 @@ class _PengajarMateriTambahState extends State<PengajarMateriTambah> {
                           ApiDatabase().setPengajarMateriTambah(
                         _formKeyPengajarMateriTambah
                             .currentState!.value['mata_pelajaran'],
-                        _controllerMateri.document
-                            .toDelta()
-                            .toJson()
-                            .toString(),
+                        html,
                       );
                       _futureSetPengajarMateriTambah.then((value) {
                         if (value.status == 'Success') {

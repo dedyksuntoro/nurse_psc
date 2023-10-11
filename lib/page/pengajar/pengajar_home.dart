@@ -238,7 +238,10 @@ class _PengajarHomeState extends State<PengajarHome> {
                                 subtitle: const Text('Soal pembelajaran'),
                                 trailing: const Icon(Icons.arrow_forward_ios),
                               ),
-                              onTap: () {},
+                              onTap: () {
+                                Navigator.pushNamed(
+                                    context, '/soal-pengajar-matpel');
+                              },
                             ),
                           ],
                         ),

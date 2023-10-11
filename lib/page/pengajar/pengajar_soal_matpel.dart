@@ -2,42 +2,32 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:nurse_psc/api/api_database.dart';
 
-class PengajarSoal extends StatefulWidget {
-  const PengajarSoal({super.key});
+class PengajarSoalMatpel extends StatefulWidget {
+  const PengajarSoalMatpel({super.key});
 
   @override
-  State<PengajarSoal> createState() => _PengajarSoalState();
+  State<PengajarSoalMatpel> createState() => _PengajarSoalMatpelState();
 }
 
-class _PengajarSoalState extends State<PengajarSoal> {
-  late Future<List<ListPengajarSoal>> _futurePengajarSoal;
+class _PengajarSoalMatpelState extends State<PengajarSoalMatpel> {
+  late Future<List<ListPengajarMataPelajaran>> _futurePengajarMataPelajaran;
 
   @override
   void initState() {
     // TODO: implement initState
     super.initState();
+    _futurePengajarMataPelajaran = ApiDatabase().getPengajarMataPelajaran();
   }
 
   @override
   Widget build(BuildContext context) {
-    String idMatpel = ModalRoute.of(context)?.settings.arguments as String;
-    _futurePengajarSoal = ApiDatabase().getPengajarSoal(idMatpel);
     return Scaffold(
       appBar: AppBar(
         systemOverlayStyle: SystemUiOverlayStyle.light,
         title: const Text(
-          "Soal",
+          "Pilih Mata Pelajaran",
           style: TextStyle(color: Colors.white, fontWeight: FontWeight.bold),
         ),
-        actions: [
-          IconButton(
-            onPressed: () {
-              Navigator.pushNamed(context, '/soal-pengajar-tambah',
-                  arguments: idMatpel);
-            },
-            icon: const Icon(Icons.add_rounded),
-          ),
-        ],
         titleSpacing: 0,
         iconTheme: const IconThemeData(color: Colors.white),
         flexibleSpace: Container(
@@ -53,8 +43,8 @@ class _PengajarSoalState extends State<PengajarSoal> {
           ),
         ),
       ),
-      body: FutureBuilder<List<ListPengajarSoal>>(
-        future: _futurePengajarSoal,
+      body: FutureBuilder<List<ListPengajarMataPelajaran>>(
+        future: _futurePengajarMataPelajaran,
         builder: (context, snapshot) {
           if (snapshot.connectionState == ConnectionState.done) {
             if (snapshot.hasError) {
@@ -77,9 +67,8 @@ class _PengajarSoalState extends State<PengajarSoal> {
     return Center(
       child: FloatingActionButton.extended(
         onPressed: () {
-          String idMatpel =
-              ModalRoute.of(context)?.settings.arguments as String;
-          _futurePengajarSoal = ApiDatabase().getPengajarSoal(idMatpel);
+          _futurePengajarMataPelajaran =
+              ApiDatabase().getPengajarMataPelajaran();
           setState(() {});
         },
         icon: const Icon(Icons.refresh, color: Colors.white),
@@ -112,8 +101,7 @@ class _PengajarSoalState extends State<PengajarSoal> {
         ),
       ),
       onRefresh: () async {
-        String idMatpel = ModalRoute.of(context)?.settings.arguments as String;
-        _futurePengajarSoal = ApiDatabase().getPengajarSoal(idMatpel);
+        _futurePengajarMataPelajaran = ApiDatabase().getPengajarMataPelajaran();
         setState(() {});
       },
     );
@@ -134,8 +122,7 @@ class _PengajarSoalState extends State<PengajarSoal> {
       backgroundColor: Theme.of(context).primaryColor,
       strokeWidth: 3.0,
       onRefresh: () async {
-        String idMatpel = ModalRoute.of(context)?.settings.arguments as String;
-        _futurePengajarSoal = ApiDatabase().getPengajarSoal(idMatpel);
+        _futurePengajarMataPelajaran = ApiDatabase().getPengajarMataPelajaran();
         setState(() {});
       },
       child: ListView.separated(
@@ -153,22 +140,14 @@ class _PengajarSoalState extends State<PengajarSoal> {
           itemBuilder: (context, index) {
             return ListTile(
               tileColor: Colors.white,
-              title: Text(
-                snapshot.data![index].soal,
-                textAlign: TextAlign.justify,
-                style: TextStyle(fontWeight: FontWeight.bold),
-              ),
-              subtitle: Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  Text('A. ' + snapshot.data![index].jawabanA),
-                  Text('B. ' + snapshot.data![index].jawabanB),
-                  Text('C. ' + snapshot.data![index].jawabanC),
-                  Text('D. ' + snapshot.data![index].jawabanD),
-                  Text('E. ' + snapshot.data![index].jawabanE),
-                ],
-              ),
-              onTap: () {},
+              title: Text(snapshot.data![index].mataPelajaran),
+              onTap: () {
+                Navigator.pushNamed(
+                  context,
+                  '/soal-pengajar',
+                  arguments: snapshot.data![index].id.toString(),
+                );
+              },
             );
           }),
     );
