@@ -3,31 +3,32 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:nurse_psc/api/api_database.dart';
 
-class PelajarSoalMatpel extends StatefulWidget {
-  const PelajarSoalMatpel({super.key});
+class PelajarPenilaianDetail extends StatefulWidget {
+  const PelajarPenilaianDetail({super.key});
 
   @override
-  State<PelajarSoalMatpel> createState() => _PelajarSoalMatpelState();
+  State<PelajarPenilaianDetail> createState() => _PelajarPenilaianDetailState();
 }
 
-class _PelajarSoalMatpelState extends State<PelajarSoalMatpel> {
-  late Future<List<ListPelajarMataPelajaran>> _futurePelajarMataPelajaran;
-  late Future<CountStatusSoal> _futureGetPelajarSoalStatus;
+class _PelajarPenilaianDetailState extends State<PelajarPenilaianDetail> {
+  late Future<List<ListPelajarPenilaianDetail>> _futurePelajarPenilaianDetail;
 
   @override
   void initState() {
     // TODO: implement initState
     super.initState();
-    _futurePelajarMataPelajaran = ApiDatabase().getPelajarMataPelajaran();
   }
 
   @override
   Widget build(BuildContext context) {
+    String idMatpel = ModalRoute.of(context)?.settings.arguments as String;
+    _futurePelajarPenilaianDetail =
+        ApiDatabase().getPelajarPenilaianDetail(idMatpel);
     return Scaffold(
       appBar: AppBar(
         systemOverlayStyle: SystemUiOverlayStyle.light,
         title: const Text(
-          "Pilih Mata Pelajaran",
+          "Penilaian Detail",
           style: TextStyle(color: Colors.white, fontWeight: FontWeight.bold),
         ),
         titleSpacing: 0,
@@ -45,8 +46,8 @@ class _PelajarSoalMatpelState extends State<PelajarSoalMatpel> {
           ),
         ),
       ),
-      body: FutureBuilder<List<ListPelajarMataPelajaran>>(
-        future: _futurePelajarMataPelajaran,
+      body: FutureBuilder<List<ListPelajarPenilaianDetail>>(
+        future: _futurePelajarPenilaianDetail,
         builder: (context, snapshot) {
           if (snapshot.connectionState == ConnectionState.done) {
             if (snapshot.hasError) {
@@ -69,7 +70,10 @@ class _PelajarSoalMatpelState extends State<PelajarSoalMatpel> {
     return Center(
       child: FloatingActionButton.extended(
         onPressed: () {
-          _futurePelajarMataPelajaran = ApiDatabase().getPelajarMataPelajaran();
+          String idMatpel =
+              ModalRoute.of(context)?.settings.arguments as String;
+          _futurePelajarPenilaianDetail =
+              ApiDatabase().getPelajarPenilaianDetail(idMatpel);
           setState(() {});
         },
         icon: const Icon(Icons.refresh, color: Colors.white),
@@ -102,7 +106,9 @@ class _PelajarSoalMatpelState extends State<PelajarSoalMatpel> {
         ),
       ),
       onRefresh: () async {
-        _futurePelajarMataPelajaran = ApiDatabase().getPelajarMataPelajaran();
+        String idMatpel = ModalRoute.of(context)?.settings.arguments as String;
+        _futurePelajarPenilaianDetail =
+            ApiDatabase().getPelajarPenilaianDetail(idMatpel);
         setState(() {});
       },
     );
@@ -123,7 +129,9 @@ class _PelajarSoalMatpelState extends State<PelajarSoalMatpel> {
       backgroundColor: Theme.of(context).primaryColor,
       strokeWidth: 3.0,
       onRefresh: () async {
-        _futurePelajarMataPelajaran = ApiDatabase().getPelajarMataPelajaran();
+        String idMatpel = ModalRoute.of(context)?.settings.arguments as String;
+        _futurePelajarPenilaianDetail =
+            ApiDatabase().getPelajarPenilaianDetail(idMatpel);
         setState(() {});
       },
       child: ListView.separated(
@@ -141,45 +149,18 @@ class _PelajarSoalMatpelState extends State<PelajarSoalMatpel> {
           itemBuilder: (context, index) {
             return ListTile(
               tileColor: Colors.white,
-              title: Text(snapshot.data![index].mataPelajaran),
-              onTap: () {
-                if (snapshot.data![index].statusMateri == 'null') {
-                  AwesomeDialog(
-                    context: context,
-                    dismissOnBackKeyPress: false,
-                    dismissOnTouchOutside: false,
-                    dialogType: DialogType.error,
-                    animType: AnimType.scale,
-                    title: 'Selesaikan Materi',
-                    desc:
-                        'Materi Belum Anda Selesaikan.\nSelesaikan Dahulu Materi Soal Yang Anda Pilih!',
-                    btnOkOnPress: () {},
-                  ).show();
-                } else {
-                  _futureGetPelajarSoalStatus = ApiDatabase()
-                      .getPelajarCountStatusSoal(snapshot.data![index].id);
-                  _futureGetPelajarSoalStatus.then((valueStatusSoal) {
-                    if (valueStatusSoal.statusSoal == '0') {
-                      Navigator.pushNamed(
-                        context,
-                        '/soal-pelajar',
-                        arguments: snapshot.data![index].id.toString(),
-                      );
-                    } else {
-                      AwesomeDialog(
-                        context: context,
-                        dismissOnBackKeyPress: false,
-                        dismissOnTouchOutside: false,
-                        dialogType: DialogType.error,
-                        animType: AnimType.scale,
-                        title: 'Sudah Selesai',
-                        desc: 'Anda Sudah Menyelesaikan Soal Ini.',
-                        btnOkOnPress: () {},
-                      ).show();
-                    }
-                  });
-                }
-              },
+              title: Text(
+                snapshot.data![index].soal,
+                style: const TextStyle(fontWeight: FontWeight.bold),
+              ),
+              subtitle: Column(
+                mainAxisAlignment: MainAxisAlignment.start,
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  Text('Nilai: ${snapshot.data![index].nilai}'),
+                  Text('Jawaban: ${snapshot.data![index].jawaban}'),
+                ],
+              ),
             );
           }),
     );

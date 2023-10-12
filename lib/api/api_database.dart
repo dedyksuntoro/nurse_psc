@@ -3,8 +3,8 @@ import 'dart:convert';
 import 'package:http/http.dart' as http;
 import 'package:shared_preferences/shared_preferences.dart';
 
-// String _baseUrl = "http://192.168.0.113/api_nurse_psc/";
-String _baseUrl = "http://192.168.1.7/api_nurse_psc/";
+String _baseUrl = "http://192.168.0.113/api_nurse_psc/";
+// String _baseUrl = "http://192.168.1.7/api_nurse_psc/";
 
 class ApiDatabase {
   // Future login(String email, String password) async {
@@ -291,6 +291,61 @@ class ApiDatabase {
       throw Exception('Failed to load');
     }
   }
+
+  Future<List<ListPelajarPenilaian>> getPelajarPenilaian() async {
+    SharedPreferences localStorage;
+    localStorage = await SharedPreferences.getInstance();
+    final response = await http.post(
+      Uri.parse('${_baseUrl}get_pelajar_penilaian.php'),
+      body: {
+        'id_user': localStorage.get('id').toString(),
+      },
+    );
+    if (response.statusCode == 200) {
+      List jsonResponse = json.decode(response.body);
+      return jsonResponse
+          .map((data) => ListPelajarPenilaian.fromJson(data))
+          .toList();
+    } else {
+      throw Exception('Failed to load');
+    }
+  }
+
+  Future<List<ListPelajarPenilaianDetail>> getPelajarPenilaianDetail(
+      idMataPelajaran) async {
+    SharedPreferences localStorage;
+    localStorage = await SharedPreferences.getInstance();
+    final response = await http.post(
+      Uri.parse('${_baseUrl}get_pelajar_penilaian_detail.php'),
+      body: {
+        'id_user': localStorage.get('id').toString(),
+        'id_mata_pelajaran': idMataPelajaran,
+      },
+    );
+    if (response.statusCode == 200) {
+      List jsonResponse = json.decode(response.body);
+      return jsonResponse
+          .map((data) => ListPelajarPenilaianDetail.fromJson(data))
+          .toList();
+    } else {
+      throw Exception('Failed to load');
+    }
+  }
+
+  Future<CountStatusSoal> getPelajarCountStatusSoal(idMataPelajaran) async {
+    SharedPreferences localStorage;
+    localStorage = await SharedPreferences.getInstance();
+    final response = await http
+        .post(Uri.parse('${_baseUrl}get_pelajar_soal_status.php'), body: {
+      'id_mata_pelajaran': idMataPelajaran,
+      'id_user': localStorage.get('id').toString(),
+    });
+    if (response.statusCode == 200) {
+      return CountStatusSoal.fromJson(jsonDecode(response.body));
+    } else {
+      throw Exception('Failed to load');
+    }
+  }
 }
 
 class Crud {
@@ -541,6 +596,69 @@ class ListPelajarSoal {
       jawabanBenar: json['jawaban_benar'].toString(),
       nilaiBenar: json['nilai_benar'].toString(),
       mataPelajaran: json['mata_pelajaran'].toString(),
+    );
+  }
+}
+
+class ListPelajarPenilaian {
+  final String idUser;
+  final String idMataPelajaran;
+  final String mataPelajaran;
+  final String nilai;
+
+  const ListPelajarPenilaian({
+    required this.idUser,
+    required this.idMataPelajaran,
+    required this.mataPelajaran,
+    required this.nilai,
+  });
+
+  factory ListPelajarPenilaian.fromJson(Map<String, dynamic> json) {
+    return ListPelajarPenilaian(
+      idUser: json['id_user'].toString(),
+      idMataPelajaran: json['id_mata_pelajaran'].toString(),
+      mataPelajaran: json['mata_pelajaran'].toString(),
+      nilai: json['nilai'].toString(),
+    );
+  }
+}
+
+class ListPelajarPenilaianDetail {
+  final String idUser;
+  final String idMataPelajaran;
+  final String soal;
+  final String jawaban;
+  final String nilai;
+
+  const ListPelajarPenilaianDetail({
+    required this.idUser,
+    required this.idMataPelajaran,
+    required this.soal,
+    required this.jawaban,
+    required this.nilai,
+  });
+
+  factory ListPelajarPenilaianDetail.fromJson(Map<String, dynamic> json) {
+    return ListPelajarPenilaianDetail(
+      idUser: json['id_user'].toString(),
+      idMataPelajaran: json['id_mata_pelajaran'].toString(),
+      soal: json['soal'].toString(),
+      jawaban: json['jawaban'].toString(),
+      nilai: json['nilai'].toString(),
+    );
+  }
+}
+
+class CountStatusSoal {
+  final String statusSoal;
+
+  const CountStatusSoal({
+    required this.statusSoal,
+  });
+
+  factory CountStatusSoal.fromJson(Map<String, dynamic> json) {
+    return CountStatusSoal(
+      statusSoal: json['status_soal'].toString(),
     );
   }
 }

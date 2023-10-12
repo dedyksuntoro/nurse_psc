@@ -215,6 +215,32 @@ class _PelajarHomeState extends State<PelajarHome> {
                                     context, '/soal-pelajar-matpel');
                               },
                             ),
+                            GestureDetector(
+                              child: ListTile(
+                                leading: CircleAvatar(
+                                  backgroundColor:
+                                      Theme.of(context).primaryColor,
+                                  child: const Icon(
+                                    Icons.check_circle_rounded,
+                                    color: Colors.white,
+                                  ),
+                                ),
+                                title: const Text(
+                                  'Penilaian',
+                                  style: TextStyle(
+                                    color: Colors.black87,
+                                    fontWeight: FontWeight.w500,
+                                    fontSize: 22,
+                                  ),
+                                ),
+                                subtitle: const Text('Hasil penilaian'),
+                                trailing: const Icon(Icons.arrow_forward_ios),
+                              ),
+                              onTap: () {
+                                Navigator.pushNamed(
+                                    context, '/penilaian-pelajar');
+                              },
+                            ),
                           ],
                         ),
                       ),
